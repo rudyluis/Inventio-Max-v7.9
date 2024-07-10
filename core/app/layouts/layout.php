@@ -281,6 +281,7 @@ foreach($bolsas as $bolsa){
               <ul class="treeview-menu">
                 <li><a href="./?view=inventary&stock=<?php echo StockData::getPrincipal()->id;?>">Inventario Principal</a></li>
                 <li><a href="./?view=re">Abastecer</a></li>
+                <li><a href="./?view=rem">Abastecer Materia prima</a></li>
             <?php if(Core::$user->kind==1):?>
                 <li><a href="./?view=inventaryval&stock=<?php echo StockData::getPrincipal()->id;?>">Valor del Inventario</a></li>
                 <li><a href="./?view=search">Buscar Productos</a></li>
