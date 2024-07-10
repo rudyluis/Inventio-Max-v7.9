@@ -1,5 +1,5 @@
 <?php
-
+error_reporting(0);
 if(count($_POST)>0){
   $product = new ProductData();
   $product->kind = $_POST["kind"];
@@ -21,7 +21,7 @@ if(count($_POST)>0){
 
   $product->brand_id=$_POST["brand_id"]!=""?$_POST["brand_id"]:"NULL";
   $product->category_id=$_POST["category_id"]!=""?$_POST["category_id"]:"NULL";
-  $product->inventary_min=$_POST["inventary_min"]!=""?$_POST["inventary_min"]:"10";
+  $product->inventary_min=$_POST["inventary_min"]!=""?$_POST["inventary_min"]:"100000";
 
 //  $product->category_id=$category_id;
 //  $product->inventary_min=$inventary_min;
@@ -43,7 +43,7 @@ if(count($_POST)>0){
 //print_r($_POST);
 //echo $_POST["q"];
 if($_POST["kind"]=="1"){
-if($_POST["q"]!="" || $_POST["q"]>"0"){
+if(isset($_POST["q"]) && ($_POST["q"]!="" || $_POST["q"]>"0")){
 
       $y = new YYData();
       $yy = $y->add();
@@ -74,6 +74,19 @@ $op->is_oficial=1;
 $op->add();
 }
 }
+
+ $prod_bolsa = new BolsasData();
+ $tamanio_arreglo = count($_POST["producto_bolsa"]);
+ if($tamanio_arreglo >= 1){
+	 for($i=0; $i<=$tamanio_arreglo-1; $i++){
+		 $prod_bolsa->id_producto = $prod[1];
+		 $prod_bolsa->id_bolsa = $_POST["producto_bolsa"][$i];
+		 $prod_bolsa->numero_sachets_utilizado = 1;
+		 $prod_bolsa->id_usuario_registro = $_SESSION["user_id"];
+		 $prod_bolsa->producto_bolsa_add();
+	 }
+	 
+ }
 
 print "<script>window.location='index.php?view=products';</script>";
 

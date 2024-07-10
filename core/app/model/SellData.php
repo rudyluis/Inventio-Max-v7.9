@@ -19,6 +19,12 @@ class SellData {
 		$sql .= "value (\"$this->invoice_code\",\"$this->comment\",$this->ref_id,$this->person_id,$this->stock_to_id,$this->iva,$this->p_id,$this->d_id,$this->total,$this->discount,$this->cash,$this->user_id,$this->created_at)";
 		return Executor::doit($sql);
 	}
+	public function add_admi(){
+		$sql = "insert into ".self::$tablename." (invoice_code,comment,ref_id,person_id,stock_to_id,iva,p_id,d_id,total,discount,cash,user_id,created_at) ";
+		$sql .= "value (\"$this->invoice_code\",\"$this->comment\",$this->ref_id,$this->person_id,$this->stock_to_id,$this->iva,$this->p_id,$this->d_id,$this->total,$this->discount,$this->cash,$this->user_id,\"$this->fecha\")";
+		//echo($sql);exit;
+		return Executor::doit($sql);
+	}
 	public function add_traspase(){
 		$sql = "insert into ".self::$tablename." (stock_to_id,stock_from_id,operation_type_id,iva,p_id,d_id,total,discount,user_id,created_at) ";
 		$sql .= "value ($this->stock_to_id,$this->stock_from_id,6,$this->iva,$this->p_id,$this->d_id,$this->total,$this->discount,$this->user_id,$this->created_at)";
@@ -50,7 +56,18 @@ class SellData {
 		$sql .= "value (\"$this->invoice_code\",$this->f_id,$this->ref_id, $this->person_id,$this->stock_to_id,$this->total,$this->p_id,$this->d_id,$this->user_id,1,$this->created_at)";
 		return Executor::doit($sql);
 	}
-
+	public function add_rea2(){
+		$sql = "insert into ".self::$tablename."(invoice_code,f_id,ref_id,person_id,stock_to_id,total,p_id,d_id,user_id,operation_type_id,created_at) ";
+		$sql .= "value (\"$this->invoice_code\",$this->f_id,$this->ref_id, $this->person_id,$this->stock_to_id,$this->total,$this->p_id,$this->d_id,$this->user_id,1,\"$this->fecha\")";
+		return Executor::doit($sql);
+	}
+	public function add_recredit(){
+		$sql = "insert into ".self::$tablename."(invoice_code,f_id,ref_id,person_id,stock_to_id,total,p_id,d_id,user_id,operation_type_id,created_at,cash,comment) ";
+		$sql .= "value (\"$this->invoice_code\",$this->f_id,$this->ref_id, $this->person_id,$this->stock_to_id,$this->total,$this->p_id,$this->d_id,$this->user_id,1,\"$this->fecha\,
+		$this->cash,\"$this->comment\")";
+		
+		return Executor::doit($sql);
+	}
 
 public function add_with_client(){	
 		$sql = "insert into ".self::$tablename." (iva,p_id,d_id,total,discount,person_id,user_id,created_at) ";
@@ -79,7 +96,7 @@ public function add_with_client(){
 	}
 
 	public function update(){
-		$sql = "update ".self::$tablename." set f_id=$this->f_id,person_id=$this->person_id,invoice_code=\"$this->invoice_code\",invoice_file=\"$this->invoice_file\",comment=\"$this->comment\" where id=$this->id";
+		$sql = "update ".self::$tablename." set f_id=$this->f_id,person_id=$this->person_id,invoice_code=\"$this->invoice_code\",invoice_file=\"$this->invoice_file\",comment=\"$this->comment\", cash=$this->cash where id=$this->id";
 		Executor::doit($sql);
 	}
 
@@ -251,7 +268,8 @@ public function add_with_client(){
 	}
 
 	public static function getResToPay(){
-		$sql = "select * from ".self::$tablename." where operation_type_id=1 and p_id=2  order by created_at desc";
+		$sql = "select * from ".self::$tablename." where operation_type_id=1 and p_id=4  order by created_at desc";
+
 		$query = Executor::doit($sql);
 		return Model::many($query[0],new SellData());
 	}

@@ -24,7 +24,7 @@
 <div class="box-body">
 			<table class="table table-bordered datatable table-hover">
 			<thead>
-			<th>RFC/RUT</th>
+			<th>NIT</th>
 			<th>Nombre completo</th>
 			<th>Direccion</th>
 			<th>Email</th>

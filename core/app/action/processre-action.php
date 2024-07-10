@@ -19,8 +19,21 @@ $process = true;
 			$sell->total = $_POST["total"];
 			$sell->stock_to_id = $_POST["stock_id"];
 			$sell->person_id=$_POST["client_id"]!=""?$_POST["client_id"]:"NULL";
-
-			$s = $sell->add_re();
+			
+			$sell->cash=$_POST["money"];
+			$sell->fecha=$_POST["fecha"];
+			if($_POST["p_id"]==4){
+				$saldo=$_POST["total"]-$_POST["money"];
+             	//$sell->comment="[Pago Bs.".$_POST["money"]."--->Saldo Bs.".$saldo." en Fecha:".date('m-d-Y h:i:s a', time())."]";
+             	$sell->comment="[Pago Bs.".$_POST["money"]."--->Saldo Bs.".$saldo." en Fecha:".$_POST["fecha"]." Recibo:".$_POST["invoice_code"]."]";
+             	$s = $sell->add_recredit();
+			}
+			else{
+				//$s = $sell->add_re();
+				$s = $sell->add_rea2();
+			}
+			//
+			
 
 
 		foreach($cart as  $c){
@@ -43,6 +56,7 @@ $process = true;
 			 $op->product_id = $c["product_id"] ;
 			 $op->operation_type_id=$operation_type; // 1 - entrada
 			 $op->sell_id=$s[1];
+
 			 $op->q= $c["q"];
 
 			$add = $op->add();			 		

@@ -78,12 +78,18 @@ $product = ProductData::getById($p["product_id"]);
 
 
 <div class="col-md-12">
+  <div class="form-group">
+    <label for="inputEmail1" class="control-label">No. Factura/Recibo</label>
+   <input type="text" name="invoice_code" value="" class="form-control"  placeholder="No. Factura">
+   <div class="row">
+  </div>
+  </div>
 <div class="form-group">
-    <label for="inputEmail1" class="control-label">No. Factura</label>
-   <input type="text" name="invoice_code" value="" class="form-control"  placeholder="No. Factura"><div class="row">
+     <label class="control-label">Fecha</label> 
+          <div class="col-lg-12">
+             <input type="date" name="fecha" value="" id="fecha" class="form-control">
+         </div>      
   </div>
-  </div>
-
 <div class="col-md-6">
 <div class="form-group">
     <div class="">
@@ -199,11 +205,13 @@ $clients = FData::getAll();
 <script>
   $("#processsell").submit(function(e){
     money = $("#money").val();
-    if(money<<?php echo $total;?>){
+    tipo_pago =$("select[name=p_id]").val();
+
+    if(money<<?php echo $total;?> && tipo_pago!=4){
       alert("No se puede efectuar la operacion");
       e.preventDefault();
     }else{
-      go = confirm("Cambio: $"+(money-<?php echo $total;?>));
+      go = confirm("Saldo: $"+(money-<?php echo $total;?>));
       if(go){
       e.preventDefault();
         $.post("./index.php?action=processre",$("#processsell").serialize(),function(data){

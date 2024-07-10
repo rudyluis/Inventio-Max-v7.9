@@ -21,7 +21,7 @@ for($i=$sd;$i<=$ed;$i+=(60*60*24)){
 }
 ?>
   <section class="content-header">
-    <h1>Inventio Max</h1>
+    <h1>CROWN Coffee - Inventory System</h1>
     <h4>Almacen principal: <?php echo StockData::getPrincipal()->name;  ?></h4>
   </section>
 

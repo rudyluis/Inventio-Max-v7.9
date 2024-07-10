@@ -13,37 +13,36 @@ if(Core::$user->kind==3){ Core::redir("./?view=sell"); }
         <section class="content">
 
   <?php
-  $found=false;
-$products = ProductData::getAll();
-//print_r($products);
-foreach($products as $product){
-  $q= OperationData::getQByStock($product->id,StockData::getPrincipal()->id);
-if( $q==0 ||  $q<=$product->inventary_min){
-    $found=true;
-    break;
+	$found=false;
+	//$products = ProductData::getAll();
+	$bolsas   = BolsasData::getAll();
 
-  }
-}
+	/*foreach($products as $product){
+	  $q= OperationData::getQByStock($product->id,StockData::getPrincipal()->id);
+		if( $q==0 ||  $q<=$product->inventary_min){
+		$found=true;
+		break;
+
+	  }
+	}*/
+	foreach($bolsas as $bolsa){
+		$existe_desabastecimiento = $bolsa->getStockBolsas($bolsa->id_bolsas);
+		if($existe_desabastecimiento[0]->sachets_vendidos >= $bolsa->cantidad_minima){
+			$found = true;
+			break;
+		}
+	}
   ?>
 <div class="row">
   <div class="col-md-12">
-<?php if($found):?>
-<div class="btn-group pull-right">
-  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-    <i class="fa fa-download"></i> Descargar <span class="caret"></span>
-  </button>
-  <ul class="dropdown-menu" role="menu">
-    <li><a href="report/alerts-word.php">Word 2007 (.docx)</a></li>
-    <li><a href="report/alerts-xlsx.php">Excel 2007 (.xlsx)</a></li>
-<li><a onclick="thePDF()" id="makepdf" class="">PDF (.pdf)</a>
-  </ul>
-</div>
-<?php endif;?>
-<?php if($found):?>
+
+
+<?php if($found){?>
 <?php
 $page = 1;
 $limit=10;
-if(count($products)>0){
+
+if(count($bolsas)>0){
 
 
   ?>
@@ -59,33 +58,42 @@ if(count($products)>0){
 
 <table class="table table-bordered table-hover datatable">
   <thead>
-    <th >Codigo</th>
+    <!--<th >Codigo</th>
     <th>Nombre del producto</th>
     <th>Precio Entrada</th>
     <th>Precio Salida</th>
     <th>En Stock</th>
+    <th></th>-->
+	<th >Codigo</th>
+    <th>Nombre de la Bolsa/Paquete</th>
+    <th>Cantidad mínima</th>
+    <th>Número de Sachets de la Bolsa</th>
+    <th>Sachets - Sachets vendidos/bolsa</th>
     <th></th>
   </thead>
   <?php
-foreach($products as $product):
+foreach($bolsas as $bolsa){
 //  $q=OperationData::getQ($product->id);
-  $q= OperationData::getQByStock($product->id,StockData::getPrincipal()->id);
-
+	//$q= OperationData::getQByStock($product->id,StockData::getPrincipal()->id);
+	$existe_desabastecimiento = $bolsa->getStockBolsas($bolsa->id_bolsas);
+	$q = floatval($bolsa->numero_sachets - $existe_desabastecimiento[0]->sachets_vendidos);
   ?>
-  <?php if( $q==0 ||  $q<=$product->inventary_min):?>
-  <tr class="<?php if($q==0){ echo "danger"; }else if($q<=$product->inventary_min/2){ echo "danger"; } else if($q<=$product->inventary_min){ echo "warning"; } ?>">
-    <td><?php echo $product->id; ?></td>
-    <td><?php echo $product->name; ?></td>
-    <td><?php echo Core::$symbol; ?> <?php echo number_format($product->price_in,2,'.',','); ?></td>
-    <td><?php echo Core::$symbol; ?> <?php echo number_format($product->price_out,2,'.',','); ?></td>
-    <td><?php echo $q; ?></td>
+  <?php if($existe_desabastecimiento[0]->sachets_vendidos >= $bolsa->cantidad_minima){ ?>
+  <tr class="<?php if($q==0){ echo "danger"; }else if($q<=$bolsa->numero_sachets/3){ echo "danger"; } else if($q<=$bolsa->numero_sachets/2){ echo "warning"; } ?>">
+    <td><?php echo $bolsa->id_bolsas; ?></td>
+    <td><?php echo $bolsa->nombre_bolsas; ?></td>
+    <!--<td><?php echo Core::$symbol; ?> <?php echo number_format($product->price_in,2,'.',','); ?></td>
+    <td><?php echo Core::$symbol; ?> <?php echo number_format($product->price_out,2,'.',','); ?></td>-->
+    <td> <?php echo $bolsa->cantidad_minima; ?></td>
+	<td> <?php echo $bolsa->numero_sachets; ?></td>
+	<td><?php echo $q; ?></td>
     <td>
-    <?php if($q==0){ echo "<span class='label label-danger'>No hay existencias.</span>";}else if($q<=$product->inventary_min/2){ echo "<span class='label label-danger'>Quedan muy pocas existencias.</span>";} else if($q<=$product->inventary_min){ echo "<span class='label label-warning'>Quedan pocas existencias.</span>";} ?>
+    <?php if($q==0){ echo "<span class='label label-danger'>No hay existencias.</span>";}else if($q<=$bolsa->numero_sachets/3){ echo "<span class='label label-danger'>Quedan muy pocas existencias.</span>";} else if($q<=$bolsa->numero_sachets/2){ echo "<span class='label label-warning'>Quedan pocas existencias.</span>";} ?>
     </td>
   </tr>
-<?php endif;?>
+<?php }?>
 <?php
-endforeach;
+}
 ?>
 </table>
   </div><!-- /.box-body -->
@@ -105,15 +113,15 @@ endforeach;
 }
 
 ?>
-<?php else:?>
+<?php } else{?>
   <div class="jumbotron">
     <h2>No hay alertas</h2>
     <p>Por el momento no hay alertas de inventario, estas se muestran cuando el inventario ha alcanzado el nivel minimo.</p>
   </div>
-<?php endif;?>
+<?php }?>
 <br><br><br><br><br><br><br><br><br><br>
   </div>
-</div>
+</div>-->
         </section><!-- /.content -->
 
 

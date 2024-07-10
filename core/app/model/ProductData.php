@@ -10,7 +10,7 @@ class ProductData {
 		$this->user_id = "";
 		$this->image = "";
 		$this->presentation = "0";
-		$this->created_at = "NOW()";
+		$this->created_at = "current_timestamp()";
 	}
 
 	public function getCategory(){ return CategoryData::getById($this->category_id);}
@@ -68,13 +68,13 @@ class ProductData {
 
 
 	public static function getAll(){
-		$sql = "select * from ".self::$tablename;
+		$sql = "select * from ".self::$tablename." order by id desc";
 		$query = Executor::doit($sql);
 		return Model::many($query[0],new ProductData());
 	}
 
 	public static function getAllByCategoryId($id){
-		$sql = "select * from ".self::$tablename." where category_id=$id";
+		$sql = "select * from ".self::$tablename." where category_id=$id order by id desc";
 		$query = Executor::doit($sql);
 		return Model::many($query[0],new ProductData());
 	}

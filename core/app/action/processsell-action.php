@@ -2,6 +2,7 @@
 date_default_timezone_set("America/Mexico_City");
 if(isset($_SESSION["cart"])){
 	$cart = $_SESSION["cart"];
+
 	if(count($cart)>0){
 /// antes de proceder con lo que sigue vamos a verificar que:
 		// haya existencia de productos
@@ -39,8 +40,6 @@ $_SESSION["errors"] = $errors;
 
 
 
-
-
 //////////////////////////////////
 		if($process==true){
 			$iva_val = ConfigurationData::getByPreffix("imp-val")->val;
@@ -62,8 +61,16 @@ $_SESSION["errors"] = $errors;
 			$sell->discount = $_POST["discount"];
 			$sell->stock_to_id = StockData::getPrincipal()->id;
 			$sell->person_id=$_POST["client_id"]!=""?$_POST["client_id"]:"NULL";
-
-			$s = $sell->add();
+//// fecha para administrador
+			 if(Core::$user->kind==1){
+			 	$sell->fecha=$_POST["fecha"];
+			 	$s = $sell->add_admi();
+			 }
+			else{
+				$s = $sell->add();
+			}
+///
+			
 
 			 /// si es credito....
 			 if($_POST["p_id"]==4){

@@ -1,6 +1,7 @@
 <?php if(isset($_GET["product"])):?>
 	<?php
-$products = ProductData::getLike2($_GET["product"]);
+//$products = ProductData::getLike2($_GET["product"]);
+$products = ProductData::getLike($_GET["product"]);
 if(count($products)>0){
 	?>
 <h3>Resultados de la Busqueda</h3>

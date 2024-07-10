@@ -2,6 +2,7 @@
 <?php
 $product = ProductData::getById($_GET["id"]);
 $categories = CategoryData::getAll();
+$bolsas = BolsasData::getAll();
 
 if($product!=null):
 ?>
@@ -60,7 +61,27 @@ if($product!=null):
       </select>    </div>
   </div>
 
-  <div class="form-group">
+  <div class="form-group" >
+    <label for="inputEmail1" class="col-lg-3 control-label">Bolsa/Paquete</label>
+    <div class="col-md-6">
+		<select name="producto_bolsa[]" class="form-control" multiple="multiple" disabled>
+		<option value="">-- NINGUNA --</option>
+		<?php foreach($bolsas as $bolsa){
+		  $existe = $bolsa->getBolsaProducto($product->id, $bolsa->id_bolsas);
+		  //echo $existe[0]->id_bolsa;
+		  if($existe[0]->id_bolsa > 0){
+			  $selected = "selected";
+		  }
+		  else{
+			  $selected = "";
+		  }
+		  ?>
+		  <option value="<?php echo $bolsa->id_bolsas;?>" <?php echo $selected; ?> ><?php echo $bolsa->nombre_bolsas;?></option>
+		<?php } ?>
+		  </select>    
+	</div>
+  </div>
+  <!--<div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label">Marca</label>
     <div class="col-md-6">
     <select name="brand_id" class="form-control">
@@ -69,7 +90,7 @@ if($product!=null):
       <option value="<?php echo $category->id;?>" <?php if($product->brand_id!=null&& $product->brand_id==$category->id){ echo "selected";}?>><?php echo $category->name;?></option>
     <?php endforeach;?>
       </select>    </div>
-  </div>
+  </div>-->
 
   <div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label">Descripcion</label>
@@ -96,7 +117,7 @@ if($product!=null):
       <input type="text" name="unit" class="form-control" id="unit" value="<?php echo $product->unit; ?>" placeholder="Unidad del Producto">
     </div>
   </div>
-  <div class="form-group">
+  <!--<div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label">Presentacion</label>
     <div class="col-md-6">
       <input type="text" name="presentation" class="form-control" id="inputEmail1" value="<?php echo $product->presentation; ?>" placeholder="Presentacion del Producto">
@@ -117,20 +138,20 @@ if($product!=null):
       <input type="text" name="weight" value="<?php echo $product->weight; ?>" class="form-control" placeholder="Peso">
     </div>
 
-  </div>
+  </div>-->
 
-  <div class="form-group">
+  <div class="form-group" style="display:none">
     <label for="inputEmail1" class="col-lg-3 control-label">Minima en inventario:</label>
     <div class="col-md-6">
       <input type="text" name="inventary_min" class="form-control" value="<?php echo $product->inventary_min;?>" id="inputEmail1" placeholder="Minima en Inventario (Default 10)">
     </div>
   </div>
-  <div class="form-group">
+  <!--<div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label">Fecha de caducidad:</label>
     <div class="col-md-6">
       <input type="date" name="expire_at" class="form-control" value="<?php echo $product->expire_at;?>" id="inputEmail1" placeholder="Fecha de caducidad (Default 10)">
     </div>
-  </div>
+  </div>-->
 
   <div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label" >Esta activo</label>

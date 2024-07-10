@@ -16,12 +16,21 @@ $products_array = array();
     while($x=fgets($file,4096)){
     	////////
     	if($_POST["kind"]==1){
-    		$data = explode(",", $x);
-//            echo count($data);   
-    		if(count($data)>=5){
+    		$data = explode(";", $x);
+//            var_dump( $data);   
+    		if(count($data)>=1){
 //                echo "?";
+                $encuentra_categoria = "SELECT count(name) as encontrado FROM category WHERE name like '%".strtolower(trim($data[6]))."%'";
+                $ejecuta = Executor::select_count($encuentra_categoria);
+                //echo $ejecuta; exit;
+                if($ejecuta>=1){
+                    $data[6] = $ejecuta;
+                }
+                else{
+                    $data[6] = null;
+                }
     			$ok++;
-    			$sql = "insert into product (code,name,price_in,price_out,inventary_min,user_id) value (\"$data[0]\",\"$data[1]\",$data[2],$data[3],$data[4],$_SESSION[user_id])";
+    			$sql = "insert into product (code,name,price_in,price_out,inventary_min,user_id, category_id) value (\"$data[0]\",\"$data[1]\",$data[2],$data[3],$data[4],$_SESSION[user_id], $data[6])";
     			$xy= Executor::doit($sql);
                 $products_array[]= array("id"=>$xy[1],"price_in"=>$data[2],"price_out"=>$data[3],"q"=>$data[5]);
 
@@ -32,24 +41,29 @@ $products_array = array();
     	}
 
     	else if($_POST["kind"]==2){
-    		$data = explode(",", $x);
-    		if(count($data)>=6){
+    		$data = explode(";", $x);
+    		if(count($data)>=1){
     			$ok++;
     			$sql = "insert into person (no,name,lastname,address1,email1,phone1,kind) value (\"$data[0]\",\"$data[1]\",\"$data[2]\",\"$data[3]\",\"$data[4]\",\"$data[5]\",1)";
     			Executor::doit($sql);
     		}else{
     			$error++;
     		}
+    		Core::alert("Importacion $ok Correctas, $error Errores");
+    		Core::redir("./?view=clients");
     	}
     	else if($_POST["kind"]==3){
-    		$data = explode(",", $x);
-    		if(count($data)>=6){
+    		$data = explode(";", $x);
+    		if(count($data)>=1){
     			$ok++;
     			$sql = "insert into person (no,name,lastname,address1,email1,phone1,kind) value (\"$data[0]\",\"$data[1]\",\"$data[2]\",\"$data[3]\",\"$data[4]\",\"$data[5]\",2)";
     			Executor::doit($sql);
+    			
     		}else{
     			$error++;
     		}
+    		Core::alert("Importacion $ok Correctas, $error Errores");
+    		Core::redir("./?view=providers");
     	}
 
 
@@ -67,7 +81,7 @@ $products_array = array();
 
 }
 
-Core::alert("Importacion $ok Ok, $error Error");
+Core::alert("Importacion $ok Correctas, $error Errores");
 
     if(count($products_array)>0){
 //        print_r($products_array);

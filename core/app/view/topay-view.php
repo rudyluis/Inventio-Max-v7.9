@@ -18,6 +18,7 @@
 
 <?php
 $products = null;
+
 if(Core::$user->kind==2){
 $products = SellData::getResToPayByStockId(Core::$user->stock_id);
 }else{

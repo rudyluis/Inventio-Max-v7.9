@@ -4,7 +4,7 @@ $clients = PersonData::getClients();
 <section class="content">
 <div class="row">
 	<div class="col-md-12">
-	<h1>Balance (Ventas - Gastos = Ganancia)</h1>
+	<h1>Balance (Ingresos - Egresos = Utilidad)</h1>
 
 						<form>
 						<input type="hidden" name="view" value="balance">
@@ -105,10 +105,10 @@ Morris.Area({
 <table class="table table-bordered">
 	<thead>
 		<th>Fecha</th>
-		<th>Ventas</th>
-		<th>Abastecimientos</th>
-		<th>Gastos</th>
-		<th>Ganancia</th>
+		<th>Ingresos / Ventas</th>
+		<th>Compras / Abastecimientos</th>
+		<th>Gastos Extras</th>
+		<th>Utilidad</th>
 	</thead>
 			<?php 
 $restotal=0;
@@ -118,6 +118,7 @@ for($i=$sd;$i<=$ed;$i+=(60*60*24)):
 			$operations = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),2);
 			$res = SellData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i),1);
 			$spends = SpendData::getGroupByDateOp(date("Y-m-d",$i),date("Y-m-d",$i));
+			//var_dump($res[0]);
 			 ?>
 			 <?php if(count($operations)>0):?>
 <?php // foreach($operations as $operation):?>
@@ -141,18 +142,18 @@ $spendtotal+= ($spends[0]->t);
 </div>
 			 <?php endif; ?>
 			<?php endfor;?>
-	<tr>
-		<td>Total</td>
-		<td><?php echo Core::$symbol; ?> <?php echo number_format($selltotal,2,'.',','); ?></td>
-		<td><?php echo Core::$symbol; ?> <?php echo number_format($restotal,2,'.',','); ?></td>
-		<td><?php echo Core::$symbol; ?> <?php echo number_format($spendtotal,2,'.',','); ?></td>
-		<td><?php echo Core::$symbol; ?> <?php echo number_format($selltotal-($spendtotal+$restotal),2,'.',','); ?></td>
+	<tr style="color:blue;">
+		<td><b>TOTAL</b></td>
+		<td><b><?php echo Core::$symbol; ?> <?php echo number_format($selltotal,2,'.',','); ?></b></td>
+		<td><b><?php echo Core::$symbol; ?> <?php echo number_format($restotal,2,'.',','); ?></b></td>
+		<td><b><?php echo Core::$symbol; ?> <?php echo number_format($spendtotal,2,'.',','); ?></b></td>
+		<td><b><?php echo Core::$symbol; ?> <?php echo number_format($selltotal-($spendtotal+$restotal),2,'.',','); ?></b></td>
 	</tr>
 </table>
 </div>
 <?php else:?>
 <div class="jumbotron">
-	<h2>Fecha Incorrectas</h2>
+	<h2>Fechas Incorrectas</h2>
 	<p>Puede ser que no selecciono un rango de fechas, o el rango seleccionado es incorrecto.</p>
 </div>
 <?php endif;?>

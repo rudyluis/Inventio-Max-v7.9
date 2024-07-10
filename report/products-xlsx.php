@@ -1,9 +1,10 @@
 <?php
 
 /** Error reporting */
-error_reporting(E_ALL);
-ini_set('display_errors', TRUE);
-ini_set('display_startup_errors', TRUE);
+//error_reporting(E_ALL);
+error_reporting(0);
+//ini_set('display_errors', TRUE);
+//ini_set('display_startup_errors', TRUE);
 include "../core/autoload.php";
 include "../core/app/model/ProductData.php";
 include "../core/app/model/CategoryData.php";

@@ -3,6 +3,7 @@ $sell = SellData::getById($_GET["id"]);
 $symbol = ConfigurationData::getByPreffix("currency")->val;
 $title = ConfigurationData::getByPreffix("ticket_title")->val;
 $iva_val = ConfigurationData::getByPreffix("imp-val")->val;
+//var_dump($sell);exit;
 ?>
 <section class="content">
 <div class="btn-group pull-right">
@@ -112,12 +113,23 @@ $user = $sell->getUser();
 <div class="row">
 
 <div class="col-md-12">
-    <label class="control-label">No. Factura</label>
+    <label class="control-label">No. Factura/Recibo</label>
     <div class="col-lg-12">
       <input type="text" name="invoice_code" value="<?php echo $sell->invoice_code;?>" class="form-control"  placeholder="No. Factura">
     </div>
   </div>
   </div>
+ <div class="row">
+  <div class="col-md-12">
+
+     <label class="control-label">Fecha</label> 
+          <div class="col-lg-12">
+             <input type="date" name="fecha" value="" id="fecha" class="form-control">
+         </div>      
+  
+  </div>
+ </div> 
+  
 <div class="row">
 
 <div class="col-md-6">
@@ -159,8 +171,42 @@ $clients = FData::getAll();
     <?php endforeach;?>
       </select>
     </div>
-  </div>
+</div>
 
+</div>
+
+<div class="row">
+
+  <div class="col-md-12">
+    <div class="">
+    <label class="control-label">Total Pagado</label>
+    <div class="col-lg-12">
+        <input type="text" name="total_pagado" value="<?php echo $sell->cash;?>" class="form-control"  placeholder="total_pagado">
+    </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+
+  <div class="col-md-12">
+    <div class="">
+    <label class="control-label">Saldo</label>
+    <div class="col-lg-12">
+        <input type="text" name="saldo" value="<?php echo ($sell->total-$sell->cash);?>" class="form-control"  placeholder="Saldo">
+    </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+
+  <div class="col-md-12">
+    <div class="">
+    <label class="control-label">Monto a Pagar del Saldo</label>
+    <div class="col-lg-12">
+        <input type="text" name="pagar" value="" class="form-control"  placeholder="Saldo">
+    </div>
+    </div>
+  </div>
 </div>
     </div>
     <div role="tabpanel" class="tab-pane" id="extra">
@@ -181,13 +227,13 @@ $clients = FData::getAll();
 
 <div class="row">
 
-<div class="col-md-12">
+  <div class="col-md-12">
     <div class="">
     <label class="control-label">Comentarios</label>
       <textarea name="comment"  placeholder="Comentarios" class="form-control" rows="10"><?php echo $sell->comment;?></textarea>
     </div>
   </div>
-  </div>
+</div>
 
     </div>
   </div>
@@ -202,8 +248,18 @@ $clients = FData::getAll();
 <input type="hidden" name="id" value="<?php echo $sell->id; ?>">
   <div class="row">
 <div class="col-md-12">
-
-<div class="form-group">
+    <?php if($sell->p_id==4):?>
+      <div class="form-group">
+          <div class="col-lg-offset-2 col-lg-10">
+            <div class="checkbox">
+              <label>
+              <button class="btn btn-success"> Actualizar Compra</button>
+              </label>
+            </div>
+          </div>
+      </div>
+      <?php endif; ?>
+<!--<div class="form-group">
     <div class="col-lg-offset-2 col-lg-10">
       <div class="checkbox">
         <label>
@@ -211,7 +267,7 @@ $clients = FData::getAll();
         </label>
       </div>
     </div>
-  </div>
+</div>-->
 </form>
 </div>
 </div>

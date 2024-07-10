@@ -2,7 +2,8 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Inventio Max | Panel de Administracion</title>
+    <title>ISYS | Panel de Administracion</title>
+	<link rel="icon" type="image/x-icon" href="plugins/images/favicon.png">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <!-- Bootstrap 3.3.4 -->
     <link href="plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
@@ -33,7 +34,9 @@
 
   </head>
 
-  <body class="<?php if(isset($_SESSION["user_id"]) || isset($_SESSION["client_id"])):?>  skin-blue sidebar-mini <?php else:?>login-page<?php endif; ?>">
+  <body class="<?php if(isset($_SESSION["user_id"]) || isset($_SESSION["client_id"])):?>  skin-blue sidebar-mini <?php else:?>login-page<?php endif; ?> sidebar-mini fixed"
+    style="
+      background-image: url('plugins/images/inventory-background.jpg');>
     <div class="wrapper">
       <!-- Main Header -->
       <?php if(isset($_SESSION["user_id"]) || isset($_SESSION["client_id"])):?>
@@ -41,9 +44,9 @@
         <!-- Logo -->
         <a href="./" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
-          <span class="logo-mini"><b>I</b>M</span>
+          <span class="logo-mini"><b>I</b>SYS</span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg">INVENTIO<b>MAX</b></span>
+          <span class="logo-lg">INVENT<b>SYS</b></span>
         </a>
 
         <!-- Header Navbar -->
@@ -64,14 +67,21 @@ $msgs = MessageData::getUnreadedByUserId($_SESSION["user_id"]);
 $cnt_tot = 0;
 $found=false;
 $products = ProductData::getAll();
+$bolsas   = BolsasData::getAll();
 //print_r($products);
-foreach($products as $product){
+/*foreach($products as $product){
   $q= OperationData::getQByStock($product->id,StockData::getPrincipal()->id);
 if( $q==0 ||  $q<=$product->inventary_min){
   $cnt_tot++;
  
   }
-}
+}*/
+foreach($bolsas as $bolsa){
+		$existe_desabastecimiento = $bolsa->getStockBolsas($bolsa->id_bolsas);
+		if($existe_desabastecimiento[0]->sachets_vendidos >= $bolsa->cantidad_minima){
+			$cnt_tot++;
+		}
+	}
 ?>
 <li>
             <a href="./?view=alerts">
@@ -181,7 +191,7 @@ if( $q==0 ||  $q<=$product->inventary_min){
           </div>
           -->
           <!-- Sidebar Menu -->
-          <ul class="sidebar-menu">
+          <ul class="sidebar-menu" style="overflow-y: auto; height: 600px;">
 <!--            <li class="header">ADMINISTRACION</li> -->
             <?php if(isset($_SESSION["user_id"])):?>
                         <li><a href="./index.php?view=home"><i class='fa fa-home'></i> <span>Inicio</span></a></li>
@@ -203,6 +213,12 @@ if( $q==0 ||  $q<=$product->inventary_min){
 <?php if(Core::$user->kind==1):?>
        <li><a href="./?view=sellscredit">Ventas credito</a></li>
    <?php endif; ?>
+   
+      <!---Registro de clientes para vendedores------>
+<?php if(Core::$user->kind==3):?>
+       <li><a href="./?view=clients">Clientes</a></li>
+   <?php endif; ?>
+   <!---------->
                 <li><a href="./?view=bydeliver">Por Entregar</a></li>
                 <li><a href="./?view=bycob">Por Cobrar</a></li>
                 <li><a href="./?view=sellscancel">Ventas Canceladas</a></li>
@@ -228,12 +244,13 @@ if( $q==0 ||  $q<=$product->inventary_min){
               </ul>
             </li>
             <?php if(Core::$user->kind==1):?>
-                        <li class="treeview <?php if(isset($_GET["view"]) && ($_GET["view"]=="products"||$_GET["view"]=="categories" ||$_GET["view"]=="brands"||$_GET["view"]=="clients"||$_GET["view"]=="providers"||$_GET["view"]=="newproduct"||$_GET["view"]=="editproduct"||$_GET["view"]=="productbycategory"||$_GET["view"]=="newclient"||$_GET["view"]=="editclient"||$_GET["view"]=="newprovider"||$_GET["view"]=="editprovider"||$_GET["view"]=="stocks"||$_GET["view"]=="prices")){ echo "active"; }?>">
+                        <li class="treeview <?php if(isset($_GET["view"]) && ($_GET["view"]=="bolsas"||$_GET["view"]=="products"||$_GET["view"]=="categories" ||$_GET["view"]=="brands"||$_GET["view"]=="clients"||$_GET["view"]=="providers"||$_GET["view"]=="newproduct"||$_GET["view"]=="editproduct"||$_GET["view"]=="productbycategory"||$_GET["view"]=="newclient"||$_GET["view"]=="editclient"||$_GET["view"]=="newprovider"||$_GET["view"]=="editprovider"||$_GET["view"]=="stocks"||$_GET["view"]=="prices")){ echo "active"; }?>">
               <a href="#"><i class='fa fa-database'></i> <span>Catalogos</span> <i class="fa fa-angle-left pull-right"></i></a>
               <ul class="treeview-menu">
                 <li><a href="./?view=products">Productos</a></li>
                 <li><a href="./?view=categories&opt=all">Categorias</a></li>
-                <li><a href="./?view=brands&opt=all">Marcas</a></li>
+                <li><a href="./?view=bolsas&opt=all">Bolsas / Paquetes</a></li>
+                <!--<li><a href="./?view=brands&opt=all">Marcas</a></li>-->
                 <li><a href="./?view=clients">Clientes</a></li>
                 <li><a href="./?view=providers">Proveedores</a></li>
                 <li><a href="./?view=stocks">Sucursales</a></li>
@@ -285,7 +302,7 @@ if( $q==0 ||  $q<=$product->inventary_min){
                 <li><a href="./?view=resreport">Compras</a></li>
                 <li><a href="./?view=paymentreport">Reporte de pagos [credito]</a></li>
                 <li><a href="./?view=clientreports">Clientes Populares</a></li>
-                <li><a href="./?view=vendorreports">Vendedores Populares</a></li>
+               <!-- <li><a href="./?view=vendorreports">Vendedores Populares</a></li>-->
                 <li><a href="./?view=popularproductsreport">Productos Populares</a></li>
               </ul>
             </li>
@@ -297,11 +314,11 @@ if( $q==0 ||  $q<=$product->inventary_min){
                 <li><a href="./?view=users">Usuarios</a></li>
                 <li><a href="./?view=settings">Configuracion</a></li>
                 <li><a href="./?view=import">Importar Datos</a></li>
-
               </ul>
             </li>
           <?php endif; ?>
           <?php endif; ?>
+          <li><a href="#" onClick="cargarSistemaImpuestos()"><i class="fa fa-newspaper-o"></i> Generar Factura</a></li>
             <?php elseif(isset($_SESSION["client_id"])):?>
             <li><a href="./index.php?view=clienthome"><i class='fa fa-dashboard'></i> <span>Dashboard</span></a></li>
             <li><a href="./?view=cotizations"><i class='fa fa-square-o'></i> <span>Cotizaciones</span></a></li>
@@ -323,21 +340,21 @@ if( $q==0 ||  $q<=$product->inventary_min){
 
       <!-- Content Wrapper. Contains page content -->
       <?php if(isset($_SESSION["user_id"]) || isset($_SESSION["client_id"])):?>
-      <div class="content-wrapper">
+      <div class="content-wrapper" id="contenido">
         <?php View::load("index");?>
       </div><!-- /.content-wrapper -->
 
-        <footer class="main-footer">
+       <footer class="main-footer">
         <div class="pull-right hidden-xs">
-          <b>Version</b> 7.9
+          <b>Version</b> 3.0
         </div>
-        <strong>Copyright &copy; 2017 <a href="http://evilnapsis.com/" target="_blank">Evilnapsis</a></strong>
+        <strong>Copyright &copy; 2024 <a href="https://www.ccheca.com/" target="_blank"CCHECA</a></strong>
       </footer>
       <?php else:?>
         <?php if(isset($_GET["view"]) && $_GET["view"]=="clientaccess"):?>
 <div class="login-box">
       <div class="login-logo">
-        <a href="./">INVENTIO<b>MAX</b></a>
+        <a href="./">INVENTORY<b>SYS</b></a>
       </div><!-- /.login-logo -->
       <div class="login-box-body">
       <center><h4>Cliente</h4></center>
@@ -363,10 +380,17 @@ if( $q==0 ||  $q<=$product->inventary_min){
         <?php else:?>
 <div class="login-box" >
       <div class="login-logo">
-        <a href="./">INVENTIO<b>MAX</b></a>
+          <!--<a href="./"><img src="plugins/images/logoISYS.png" class="img-fluid"  width="100%" style="display:block;margin:auto;"></a>
+          <a style="-webkit-text-stroke: 1px black;color: white;" href="./"><b>Inventory SYStem</b></a>-->
       </div><!-- /.login-logo -->
-      <div class="login-box-body" >
-      <center><h4>Admin</h4></center>
+      <div class="login-box-body"  style="border: 1px solid white;
+-moz-border-radius: 7px;
+-webkit-border-radius: 7px;
+padding: 10px;" >
+        <img src="plugins/images/banner.png" class="img-fluid img-thumbnail"  width="100%" align="center">
+        <br>
+
+      <center><h4><b>Panel de Administración</b></h4></center>
         <form action="./?action=processlogin" method="post">
           <div class="form-group has-feedback">
             <input type="text" name="username" required class="form-control" placeholder="Usuario"/>
@@ -385,7 +409,19 @@ if( $q==0 ||  $q<=$product->inventary_min){
             </div><!-- /.col -->
           </div>
         </form>
+        <br>
+         <img src="plugins/images/bateria.png" class="img-fluid"  width="50%" style="display:block;margin:auto;">
+        <br>
+        <br>
+
+        <div class="row" align="center"> 
+           <strong >Un producto de  <a href="https://www.ccheca.com/" target="_blank">CCHECA</a> ©2024
+            </strong>
+        </div>
+       
+     
       </div><!-- /.login-box-body -->
+       
     </div><!-- /.login-box -->  
       <?php endif;?>
       <?php endif;?>
@@ -404,34 +440,41 @@ if( $q==0 ||  $q<=$product->inventary_min){
     <script src="plugins/datatables/jquery.dataTables.min.js"></script>
     <script src="plugins/datatables/dataTables.bootstrap.min.js"></script>
     <script type="text/javascript">
-      $(document).ready(function(){
-        $(".datatable").DataTable({
-          "language": {
-        "sProcessing":    "Procesando...",
-        "sLengthMenu":    "Mostrar _MENU_ registros",
-        "sZeroRecords":   "No se encontraron resultados",
-        "sEmptyTable":    "Ningún dato disponible en esta tabla",
-        "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-        "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
-        "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
-        "sInfoPostFix":   "",
-        "sSearch":        "Buscar:",
-        "sUrl":           "",
-        "sInfoThousands":  ",",
-        "sLoadingRecords": "Cargando...",
-        "oPaginate": {
-            "sFirst":    "Primero",
-            "sLast":    "Último",
-            "sNext":    "Siguiente",
-            "sPrevious": "Anterior"
-        },
-        "oAria": {
-            "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
-            "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+          $(document).ready(function(){
+            $(".datatable").DataTable({
+              "language": {
+            "sProcessing":    "Procesando...",
+            "sLengthMenu":    "Mostrar _MENU_ registros",
+            "sZeroRecords":   "No se encontraron resultados",
+            "sEmptyTable":    "Ningún dato disponible en esta tabla",
+            "sInfo":          "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "sInfoEmpty":     "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "sInfoFiltered":  "(filtrado de un total de _MAX_ registros)",
+            "sInfoPostFix":   "",
+            "sSearch":        "Buscar:",
+            "sUrl":           "",
+            "sInfoThousands":  ",",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst":    "Primero",
+                "sLast":    "Último",
+                "sNext":    "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "oAria": {
+                "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+            }
         }
-    }
-        });
-      });
+            });
+          });
+          
+          function cargarSistemaImpuestos(){
+                //$("#contenido").load("https://pweb.impuestos.gob.bo/Autenticacion/index.xhtml");
+          window.open("https://pweb.impuestos.gob.bo/Autenticacion/index.xhtml","nombre_de_la_ventana,FACTURAR - CROWN COFFEE","width=760,height=600,top=50, left=300, scrollbars=SI");
+          }
+
+
     </script>
     <!-- Optionally, you can add Slimscroll and FastClick plugins.
           Both of these plugins are recommended to enhance the

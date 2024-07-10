@@ -190,6 +190,13 @@ public static function getPPByDateOfficial($start,$end){
 		$query = Executor::doit($sql);
 		return Model::many($query[0],new OperationData());
 	}
+	
+	/**BOLSAS**/
+	public static function getAllByBolsaId($bolsa_id){
+		$sql = "select * from ".self::$tablename." where id_bolsas=$bolsa_id  order by fecha_creado desc";
+		$query = Executor::doit($sql);
+		return Model::many($query[0],new OperationData());
+	}
 
 	public static function getAllByProductIdAndStock($product_id,$stock_id){
 		$sql = "select * from ".self::$tablename." where product_id=$product_id and stock_id=$stock_id and is_draft=0 and status=1 order by created_at desc";

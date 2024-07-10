@@ -108,7 +108,7 @@ $price = $product->price_out;
 <div class="row">
 
 <div class="col-md-12">
-    <label class="control-label">No. Factura</label>
+    <label class="control-label">No. Factura/Recibo</label>
     <div class="col-lg-12">
       <input type="text" name="invoice_code" class="form-control"  placeholder="No. Factura">
     </div>
@@ -174,7 +174,7 @@ $clients = DData::getAll();
 </div>
 <div class="row">
 
-<div class="col-md-12">
+<div class="col-md-6">
     <label class="control-label">Forma de pago</label>
     <div class="col-lg-12">
     <?php 
@@ -187,7 +187,16 @@ $clients = FData::getAll();
       </select>
     </div>
   </div>
-
+  <div class="col-md-6">
+   
+    <?php if(Core::$user->kind==1):?>
+           <label class="control-label">Fecha</label> 
+          <div class="col-lg-12">
+             <input type="date" name="fecha" value="" id="fecha" class="form-control">
+         </div>             
+    <?php endif; ?>
+    
+  </div>
 </div>
 <div class="row">
 
@@ -248,6 +257,7 @@ $clients = FData::getAll();
 <tr>
   <td><p><?php echo $iva_name." (".$iva_val."%) ";?></p></td>
   <td><p><b><?php echo $symbol; ?> <?php echo number_format(($total/(1 + ($iva_val/100) )) *($iva_val/100),2,'.',','); ?></b></p></td>
+  <!--<td><p><b><?php echo $symbol; ?> <?php echo number_format(($total/(1 - ($iva_val/100) )),2,'.',','); ?></b></p></td>-->
 </tr>
 <tr>
   <td><p>Total</p></td>

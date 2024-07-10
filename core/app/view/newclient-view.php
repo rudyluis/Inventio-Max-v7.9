@@ -20,9 +20,9 @@
     </div>
   </div>
   <div class="form-group">
-    <label for="inputEmail1" class="col-lg-2 control-label">RFC/RUT</label>
+    <label for="inputEmail1" class="col-lg-2 control-label">NIT/label</label>
     <div class="col-md-6">
-      <input type="text" name="no" class="form-control" id="no" placeholder="RFC/RUT">
+      <input type="text" name="no" class="form-control" id="no" placeholder="NIT">
     </div>
   </div>
   <div class="form-group">

@@ -1,7 +1,8 @@
 <section class="content">
     <?php 
-$currency = ConfigurationData::getByPreffix("currency")->val;
-$categories = CategoryData::getAll();
+		$currency = ConfigurationData::getByPreffix("currency")->val;
+		$categories = CategoryData::getAll();
+		$bolsas = BolsasData::getAll();
     ?>
 <div class="row">
 	<div class="col-md-12">
@@ -11,7 +12,8 @@ $categories = CategoryData::getAll();
   <table class="table">
   <tr>
   <td>
-		<form class="form-horizontal" method="post" enctype="multipart/form-data" id="addproduct" action="index.php?view=addproduct" role="form">
+
+<form class="form-horizontal" method="post" enctype="multipart/form-data" id="addproduct" action="index.php?view=addproduct" role="form">
 
   <div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label">Tipo</label>
@@ -59,6 +61,17 @@ $categories = CategoryData::getAll();
       </select>    </div>
   </div>
   <div class="form-group">
+    <label for="inputEmail1" class="col-lg-3 control-label">Bolsa/Paquete</label>
+    <div class="col-md-6">
+		<select name="producto_bolsa[]" class="form-control" multiple="multiple">
+		<option value="">-- NINGUNA --</option>
+		<?php foreach($bolsas as $bolsa){?>
+		  <option value="<?php echo $bolsa->id_bolsas;?>"><?php echo $bolsa->nombre_bolsas;?></option>
+		<?php } ?>
+		  </select>    
+	</div>
+  </div>
+  <!--<div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label">Marca</label>
     <div class="col-md-6">
     <select name="brand_id" class="form-control">
@@ -67,7 +80,7 @@ $categories = CategoryData::getAll();
       <option value="<?php echo $category->id;?>"><?php echo $category->name;?></option>
     <?php endforeach;?>
       </select>    </div>
-  </div>
+  </div>-->
   <div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label">Descripcion</label>
     <div class="col-md-6">
@@ -101,14 +114,14 @@ $categories = CategoryData::getAll();
     </div>
   </div>
 
-  <div class="form-group">
+  <!--<div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label">Presentacion</label>
     <div class="col-md-6">
       <input type="text" name="presentation" class="form-control" id="inputEmail1" placeholder="Presentacion del Producto">
     </div>
-  </div>
+  </div>-->
 
-  <div class="form-group">
+  <!--<div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label"></label>
     <div class="col-md-2">
     <label class="control-label">Anchura*</label>
@@ -123,28 +136,28 @@ $categories = CategoryData::getAll();
       <input type="text" name="weight"  class="form-control" placeholder="Peso">
     </div>
 
-  </div>
+  </div>-->
 
-  <div class="form-group">
+  <!--<div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label">Minima en inventario:</label>
     <div class="col-md-6">
       <input type="text" name="inventary_min" class="form-control" id="inputEmail1" placeholder="Minima en Inventario (Default 10)">
     </div>
-  </div>
+  </div>-->
 
 
-  <div class="form-group">
+  <div class="form-group" style="display:none">
     <label for="inputEmail1" class="col-lg-3 control-label">Inventario inicial:</label>
     <div class="col-md-6">
-      <input type="text" name="q" class="form-control" id="inputEmail1" placeholder="Inventario inicial">
+      <input type="text" name="q" class="form-control" id="inputEmail1" placeholder="Inventario inicial" value="100000">
     </div>
   </div>
-  <div class="form-group">
+ <!-- <div class="form-group">
     <label for="inputEmail1" class="col-lg-3 control-label">Fecha de caducidad:</label>
     <div class="col-md-6">
       <input type="date" name="expire_at" class="form-control" id="inputEmail1" placeholder="Fecha de caducidad">
     </div>
-  </div>
+  </div>-->
 
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-10">
